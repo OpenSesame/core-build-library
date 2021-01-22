@@ -22,6 +22,7 @@
     "globby": "^10.0.2",
     "rimraf": "^3.0.2",
     "ts-node": "^8.10.2",
+    "tsc": "^1.20150623.0",
     "typescript": "^3.9.7"
   },
   "engines": {
@@ -45,6 +46,13 @@
     "plugins": [
       "@oclif/plugin-help"
     ]
+  },
+  "scripts": {
+    "postpack": "rimraf oclif.manifest.json",
+    "posttest": "eslint . --ext .ts --config .eslintrc",
+    "prepack": "rimraf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "test": "echo NO TESTS",
+    "version": "oclif-dev readme && git add README.md"
   },
   "repository": "opensesame/core-build-library",
   "types": "lib/index.d.ts"
