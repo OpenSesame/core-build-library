@@ -48,7 +48,7 @@ OPTIONS
   -r, --region=region    [default: us-west-1] aws region
 ```
 
-_See code: [src/commands/build-secrets.ts](https://github.com/opensesame/core-build-library/blob/v1.0.0/src/commands/build-secrets.ts)_
+_See code: [lib/commands/build-secrets.js](https://github.com/opensesame/core-build-library/blob/v1.0.0/lib/commands/build-secrets.js)_
 
 ## `core-build help [COMMAND]`
 
@@ -82,5 +82,5 @@ OPTIONS
                              a / character)
 ```
 
-_See code: [src/commands/select-workspace.ts](https://github.com/opensesame/core-build-library/blob/v1.0.0/src/commands/select-workspace.ts)_
+_See code: [lib/commands/select-workspace.js](https://github.com/opensesame/core-build-library/blob/v1.0.0/lib/commands/select-workspace.js)_
 <!-- commandsstop -->
