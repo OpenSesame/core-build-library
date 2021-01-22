@@ -42,7 +42,7 @@ USAGE
 
 OPTIONS
   -h, --help             show CLI help
-  -m, --map=map          [default: secrets-map.json] path to secrets-map.json file
+  -m, --map=map          [default: ./secrets-map.json] path to secrets-map.json file
   -o, --output=output    [default: .env] path to output .env file
   -p, --profile=profile  name of aws profile
   -r, --region=region    [default: us-west-1] aws region
