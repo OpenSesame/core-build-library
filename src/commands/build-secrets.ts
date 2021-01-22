@@ -9,7 +9,7 @@ export default class BuildSecrets extends Command {
     help: flags.help({char: 'h'}),
     region: flags.string({char: 'r', description: 'aws region', default: 'us-west-1'}),
     profile: flags.string({char: 'p', description: 'name of aws profile'}),
-    map: flags.string({char: 'm', description: 'path to secrets-map.json file', default: 'secrets-map.json'}),
+    map: flags.string({char: 'm', description: 'path to secrets-map.json file', default: './secrets-map.json'}),
     output: flags.string({char: 'o', description: 'path to output .env file', default: '.env'}),
   }
 
