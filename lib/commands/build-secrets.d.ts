@@ -5,8 +5,7 @@ export default class BuildSecrets extends Command {
         help: import("@oclif/parser/lib/flags").IBooleanFlag<void>;
         region: flags.IOptionFlag<string>;
         profile: flags.IOptionFlag<string | undefined>;
-        map: flags.IOptionFlag<string>;
-        output: flags.IOptionFlag<string>;
+        mapfile: flags.IOptionFlag<string>;
     };
     run(): Promise<void>;
 }
