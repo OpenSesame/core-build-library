@@ -28,46 +28,27 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`core-build build-secrets [FILE]`](#core-build-build-secrets-file)
-* [`core-build hello [FILE]`](#core-build-hello-file)
+* [`core-build build-secrets`](#core-build-build-secrets)
 * [`core-build help [COMMAND]`](#core-build-help-command)
-* [`core-build select-workspace [FILE]`](#core-build-select-workspace-file)
+* [`core-build select-workspace`](#core-build-select-workspace)
 
-## `core-build build-secrets [FILE]`
+## `core-build build-secrets`
 
-describe the command here
+Output AWS secrets as environment variable assignments using secrets-map.json
 
 ```
 USAGE
-  $ core-build build-secrets [FILE]
+  $ core-build build-secrets
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help             show CLI help
+  -m, --map=map          [default: secrets-map.json] path to secrets-map.json file
+  -o, --output=output    [default: .env] path to output .env file
+  -p, --profile=profile  name of aws profile
+  -r, --region=region    [default: us-west-1] aws region
 ```
 
 _See code: [src/commands/build-secrets.ts](https://github.com/opensesame/core-build-library/blob/v1.0.0/src/commands/build-secrets.ts)_
-
-## `core-build hello [FILE]`
-
-describe the command here
-
-```
-USAGE
-  $ core-build hello [FILE]
-
-OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
-
-EXAMPLE
-  $ core-build hello
-  hello world from ./src/hello.ts!
-```
-
-_See code: [src/commands/hello.ts](https://github.com/opensesame/core-build-library/blob/v1.0.0/src/commands/hello.ts)_
 
 ## `core-build help [COMMAND]`
 
@@ -86,18 +67,19 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.1/src/commands/help.ts)_
 
-## `core-build select-workspace [FILE]`
+## `core-build select-workspace`
 
-describe the command here
+Select a terraform workspace, or create it if it does not exist. If workspace name is not provided, use the current git branch.
 
 ```
 USAGE
-  $ core-build select-workspace [FILE]
+  $ core-build select-workspace
 
 OPTIONS
-  -f, --force
-  -h, --help       show CLI help
-  -n, --name=name  name to print
+  -h, --help                 show CLI help
+
+  -w, --workspace=workspace  workspace name. If not provided, the current git branch will be used (minus the part before
+                             a / character)
 ```
 
 _See code: [src/commands/select-workspace.ts](https://github.com/opensesame/core-build-library/blob/v1.0.0/src/commands/select-workspace.ts)_
