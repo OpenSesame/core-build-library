@@ -1,12 +1,21 @@
 const util = require('util');
 const path = require('path');
 const exec = util.promisify(require('child_process').exec);
+const exists = util.promisify(require('fs').exists);
 const {Command, flags} = require('@oclif/command');
 
 class BuildSecretsCommand extends Command {
   async run() {
     const {flags} = this.parse(BuildSecretsCommand);
-    const secretsMap = require(path.join(process.cwd(), flags.mapfile));
+    
+    const mapPath = path.join(process.cwd(), flags.mapfile);
+    
+    if (!await exists(mapPath)) {
+      this.warn(`No secrets map found at ${mapPath}`);
+      return;
+    }
+
+    const secretsMap = require(mapPath);
     const profileFlag = flags.profile ? `--profile ${flags.profile}` : '';
 
     for (const secretId of Object.keys(secretsMap)) {
