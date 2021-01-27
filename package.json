@@ -11,43 +11,43 @@
     "@oclif/command": "^1.8.0",
     "@oclif/config": "^1.17.0",
     "@oclif/plugin-help": "^3.2.1",
-    "current-git-branch": "^1.1.0",
-    "tslib": "^1.14.1"
+    "current-git-branch": "^1.1.0"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.26.0",
-    "@types/current-git-branch": "^1.1.1",
-    "@types/node": "^10.17.51",
-    "rimraf": "^3.0.2",
-    "ts-node": "^8.10.2"
+    "eslint": "^5.16.0",
+    "eslint-config-oclif": "^3.1.0",
+    "globby": "^10.0.2",
+    "rimraf": "^3.0.2"
   },
   "engines": {
     "node": ">=8.0.0"
   },
   "files": [
     "/bin",
-    "/lib",
     "/npm-shrinkwrap.json",
-    "/oclif.manifest.json"
+    "/oclif.manifest.json",
+    "/src"
   ],
   "homepage": "https://github.com/opensesame/core-build-library",
   "keywords": [
     "oclif"
   ],
   "license": "MIT",
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "oclif": {
-    "commands": "./lib/commands",
+    "commands": "./src/commands",
     "bin": "core-build",
     "plugins": [
       "@oclif/plugin-help"
     ]
   },
-  "scripts": {
-    "build": "npm run clean && npm run compile",
-    "clean": "rimraf oclif.manifest.json && rimraf lib",
-    "compile": "tsc -b && oclif-dev manifest && oclif-dev readme"
-  },
   "repository": "opensesame/core-build-library",
-  "types": "lib/index.d.ts"
+  "scripts": {
+    "postpack": "rimraf oclif.manifest.json",
+    "posttest": "eslint .",
+    "prepack": "oclif-dev manifest && oclif-dev readme",
+    "test": "echo NO TESTS",
+    "version": "oclif-dev readme && git add README.md"
+  }
 }

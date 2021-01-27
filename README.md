@@ -1,7 +1,7 @@
 core-build-library
 ==================
 
-Core Build Library
+Core Build Commands
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/core-build-library.svg)](https://npmjs.org/package/core-build-library)
@@ -28,9 +28,12 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`core-build build-secrets`](#core-build-build-secrets)
-* [`core-build help [COMMAND]`](#core-build-help-command)
-* [`core-build select-workspace`](#core-build-select-workspace)
+- [core-build-library](#core-build-library)
+- [Usage](#usage)
+- [Commands](#commands)
+  - [`core-build build-secrets`](#core-build-build-secrets)
+  - [`core-build help [COMMAND]`](#core-build-help-command)
+  - [`core-build select-workspace`](#core-build-select-workspace)
 
 ## `core-build build-secrets`
 
@@ -47,7 +50,7 @@ OPTIONS
   -r, --region=region    [default: us-west-1] aws region
 ```
 
-_See code: [lib/commands/build-secrets.js](https://github.com/opensesame/core-build-library/blob/v1.0.0/lib/commands/build-secrets.js)_
+_See code: [src/commands/build-secrets.js](https://github.com/opensesame/core-build-library/blob/v1.0.0/src/commands/build-secrets.js)_
 
 ## `core-build help [COMMAND]`
 
@@ -81,5 +84,5 @@ OPTIONS
                              a / character)
 ```
 
-_See code: [lib/commands/select-workspace.js](https://github.com/opensesame/core-build-library/blob/v1.0.0/lib/commands/select-workspace.js)_
+_See code: [src/commands/select-workspace.js](https://github.com/opensesame/core-build-library/blob/v1.0.0/src/commands/select-workspace.js)_
 <!-- commandsstop -->
