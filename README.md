@@ -3,11 +3,6 @@ core-build-library
 
 Core Build Commands
 
-[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/core-build-library.svg)](https://npmjs.org/package/core-build-library)
-[![Downloads/week](https://img.shields.io/npm/dw/core-build-library.svg)](https://npmjs.org/package/core-build-library)
-[![License](https://img.shields.io/npm/l/core-build-library.svg)](https://github.com/opensesame/core-build-library/blob/master/package.json)
-
 <!-- toc -->
 * [Usage](#usage)
 * [Commands](#commands)
@@ -32,7 +27,6 @@ USAGE
 - [Usage](#usage)
 - [Commands](#commands)
   - [`core-build build-secrets`](#core-build-build-secrets)
-  - [`core-build help [COMMAND]`](#core-build-help-command)
   - [`core-build select-workspace`](#core-build-select-workspace)
 
 ## `core-build build-secrets`
@@ -51,23 +45,6 @@ OPTIONS
 ```
 
 _See code: [src/commands/build-secrets.js](https://github.com/opensesame/core-build-library/blob/v1.0.0/src/commands/build-secrets.js)_
-
-## `core-build help [COMMAND]`
-
-display help for core-build
-
-```
-USAGE
-  $ core-build help [COMMAND]
-
-ARGUMENTS
-  COMMAND  command to show help for
-
-OPTIONS
-  --all  see all commands in CLI
-```
-
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v3.2.1/src/commands/help.ts)_
 
 ## `core-build select-workspace`
 
