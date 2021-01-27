@@ -39,11 +39,5 @@
       "@oclif/plugin-help"
     ]
   },
-  "repository": "opensesame/core-build-library",
-  "scripts": {
-    "postpack": "rimraf oclif.manifest.json",
-    "prepack": "oclif-dev manifest && oclif-dev readme",
-    "test": "echo NO TESTS",
-    "version": "oclif-dev readme && git add README.md"
-  }
+  "repository": "opensesame/core-build-library"
 }
