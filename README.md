@@ -22,12 +22,9 @@ USAGE
 ```
 <!-- usagestop -->
 # Commands
-<!-- commands -->
-- [core-build-library](#core-build-library)
-- [Usage](#usage)
-- [Commands](#commands)
-  - [`core-build build-secrets`](#core-build-build-secrets)
-  - [`core-build select-workspace`](#core-build-select-workspace)
+
+- [`core-build build-secrets`](#core-build-build-secrets)
+- [`core-build select-workspace`](#core-build-select-workspace)
 
 ## `core-build build-secrets`
 
