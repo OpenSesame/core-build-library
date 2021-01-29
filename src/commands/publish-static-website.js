@@ -3,6 +3,8 @@ const { Command, flags } = require("@oclif/command");
 const JSONStream = require("JSONStream");
 const es = require("event-stream");
 const exec = util.promisify(require("child_process").exec);
+const chalk = require("chalk");
+const { clear } = require("console");
 
 class PublishStaticWebsiteCommand extends Command {
   async run() {
@@ -21,14 +23,15 @@ class PublishStaticWebsiteCommand extends Command {
           const s3SyncCommand = `aws s3 ${awsProfileFlag} sync ${flags.localDir} s3://${originBucketName}`;
           const clearCacheCommand = `aws cloudfront ${awsProfileFlag} create-invalidation --distribution-id ${cloudfrontDistribution} --paths \"/*\"`;
 
-          console.log(
-            `Uploading ${flags.localDir} to S3 bucket:\n${s3SyncCommand}\n`
-          );
+          console.log(chalk.bold(`\nUploading ${flags.localDir} to S3 bucket:`));
+          console.log(s3SyncCommand, "\n");
           await exec(s3SyncCommand);
-          console.log(
-            `Flushing Cloudfront distribution ${cloudfrontDistribution}:\n${clearCacheCommand}\n`
-          );
+
+          console.log(chalk.bold(`Flushing Cloudfront distribution:`));
+          console.log(clearCacheCommand, "\n");
           await exec(clearCacheCommand);
+
+          console.log(chalk.green("Operation successful.\n"));
         })
       );
   }
