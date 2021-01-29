@@ -9,7 +9,6 @@ const { clear } = require("console");
 class PublishStaticWebsiteCommand extends Command {
   async run() {
     const { flags } = this.parse(PublishStaticWebsiteCommand);
-    const awsProfileFlag = "--profile core-dev";
 
     process.stdin.resume();
     process.stdin.setEncoding("utf8");
@@ -20,8 +19,8 @@ class PublishStaticWebsiteCommand extends Command {
           const originBucketName = origin_bucket.value.bucket;
           const cloudfrontDistribution = cloudfront_distribution.value.id;
 
-          const s3SyncCommand = `aws s3 ${awsProfileFlag} sync ${flags.localDir} s3://${originBucketName}`;
-          const clearCacheCommand = `aws cloudfront ${awsProfileFlag} create-invalidation --distribution-id ${cloudfrontDistribution} --paths \"/*\"`;
+          const s3SyncCommand = `aws s3${flags.profile ? ` --profile ${flags.profile}` : ''} sync ${flags.localDir} s3://${originBucketName}`;
+          const clearCacheCommand = `aws cloudfront${flags.profile ? ` --profile ${flags.profile}` : ''} create-invalidation --distribution-id ${cloudfrontDistribution} --paths \"/*\"`;
 
           console.log(chalk.bold(`\nUploading ${flags.localDir} to S3 bucket:`));
           console.log(s3SyncCommand, "\n");
@@ -45,6 +44,10 @@ PublishStaticWebsiteCommand.flags = {
     char: "d",
     description: "The local dir to upload to the S3 bucket.",
   }),
+  profile: flags.string({
+    char: "p",
+    description: "AWS Profile"
+  })
 };
 
 module.exports = PublishStaticWebsiteCommand;
