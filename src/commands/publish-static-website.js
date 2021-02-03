@@ -24,21 +24,21 @@ class PublishStaticWebsiteCommand extends Command {
         );
     });
 
-      const { originBucketName, cloudfrontDistribution } = await retrieveInput;
+    const { originBucketName, cloudfrontDistribution } = await retrieveInput;
 
-      const s3SyncCommand = `aws s3${flags.profile ? ` --profile ${flags.profile}` : ''} sync ${flags.localDir} s3://${originBucketName}`;
-      const clearCacheCommand = `aws cloudfront${flags.profile ? ` --profile ${flags.profile}` : ''} create-invalidation --distribution-id ${cloudfrontDistribution} --paths \"/*\"`;
+    const s3SyncCommand = `aws s3${flags.profile ? ` --profile ${flags.profile}` : ''} sync ${flags.localDir} s3://${originBucketName}`;
+    const clearCacheCommand = `aws cloudfront${flags.profile ? ` --profile ${flags.profile}` : ''} create-invalidation --distribution-id ${cloudfrontDistribution} --paths \"/*\"`;
 
-      console.log(chalk.bold(`\nUploading ${flags.localDir} to S3 bucket:`));
-      console.log(s3SyncCommand, "\n");
-      await exec(s3SyncCommand);
+    console.log(chalk.bold(`\nUploading ${flags.localDir} to S3 bucket:`));
+    console.log(s3SyncCommand, "\n");
+    await exec(s3SyncCommand);
 
-      console.log(chalk.bold(`Flushing Cloudfront distribution:`));
-      console.log(clearCacheCommand, "\n");
-      await exec(clearCacheCommand);
+    console.log(chalk.bold(`Flushing Cloudfront distribution:`));
+    console.log(clearCacheCommand, "\n");
+    await exec(clearCacheCommand);
 
-      console.log(chalk.green("Operation successful.\n"));
-    }
+    console.log(chalk.green("Operation successful.\n"));
+  }
 }
 
 PublishStaticWebsiteCommand.description =
