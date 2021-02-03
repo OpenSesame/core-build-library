@@ -1,7 +1,7 @@
 {
   "name": "core-build-library",
   "description": "Core Build Library",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": "Core Team",
   "bin": {
     "core-build": "./bin/run"
