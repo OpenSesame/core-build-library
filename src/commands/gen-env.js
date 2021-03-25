@@ -13,13 +13,12 @@ class GenEnvCommand extends Command {
     const filePath = path.join(process.cwd(), flags.templateFile);
     const awsProfile = flags.profile;
     const rules = [
-      // {
-      //   pattern: /\$\{(?<variable>.*?)\}/,
-      //   replacer: async ({ variable }) => {
-      //     console.log("env:", variable);
-      //     return "ENV_VALUE";
-      //   },
-      // },
+      {
+        pattern: /\$\{(?<variable>.*?)\}/,
+        replacer: async ({ variable }) => {
+          return process.env[variable];
+        },
+      },
       {
         pattern: /\{\{\s*aws_secret:(?<secretId>.*?):(?<secretKey>.*?)\s*\}\}/,
         replacer: async ({ secretId, secretKey }) => {
@@ -28,13 +27,14 @@ class GenEnvCommand extends Command {
           return secrets[secretKey];
         },
       },
-      // {
-      //   pattern: /\{\{\s*aws_ssm_param:(?<paramKey>.*?)\s*\}\}/,
-      //   replacer: async ({ paramKey }) => {
-      //     console.log("ssm:", paramKey);
-      //     return "REPLACED_PARAM";
-      //   },
-      // },
+      {
+        pattern: /\{\{\s*aws_ssm_param:(?<paramKey>.*?)\s*\}\}/,
+        replacer: async ({ paramKey }) => {
+          const stdout = (await exec(`aws ssm get-parameter --name ${paramKey} --with-decryption --profile ${awsProfile}`)).stdout;
+          const value = (JSON.parse(stdout).Parameter).Value;
+          return value;
+        },
+      },
     ];
 
 
@@ -49,9 +49,8 @@ class GenEnvCommand extends Command {
     });
 
     rd.on("line", async function (line) {
-      console.log(line);
       let lineCpy = line;
-      for(const rule of rules) {
+      for await (const rule of rules) {
         let match = lineCpy.match(rule.pattern);
         while(match !== null) {
           const replacementValue = await rule.replacer(match.groups);
@@ -59,11 +58,8 @@ class GenEnvCommand extends Command {
           match = lineCpy.match(rule.pattern);
         }
       }
-      console.log(`after replace`)
-      console.log(lineCpy)
     });
 
-    console.log(flags);
     console.log(chalk.green("Operation successful.\n"));
   }
 }
@@ -85,13 +81,3 @@ GenEnvCommand.flags = {
 };
 
 module.exports = GenEnvCommand;
-
-// class GenEnvCommand extends Command {
-//   async run() {
-//     const { flags } = this.parse(GenEnvCommand);
-
-//     const filePath = path.join(process.cwd(), flags.templateFile);
-
-//     console.log(chalk.green("Operation successful.\n"));
-//   }
-// }
