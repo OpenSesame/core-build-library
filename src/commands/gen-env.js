@@ -16,7 +16,11 @@ class GenEnvCommand extends Command {
       {
         pattern: /\$\{(?<variable>.*?)\}/,
         replacer: async ({ variable }) => {
-          return process.env[variable];
+          const value = process.env[variable];
+          if (!value) {
+            throw 'Env var not found';
+          }
+          return value;
         },
       },
       {
@@ -24,7 +28,11 @@ class GenEnvCommand extends Command {
         replacer: async ({ secretId, secretKey }) => {
           const stdout = (await exec(`aws secretsmanager get-secret-value --secret-id ${secretId} --profile ${awsProfile}`)).stdout;
           const secrets = JSON.parse(JSON.parse(stdout).SecretString);
-          return secrets[secretKey];
+          const value = secrets[secretKey];
+          if (!value) {
+            throw 'Secret not found';
+          }
+          return value;
         },
       },
       {
@@ -32,6 +40,9 @@ class GenEnvCommand extends Command {
         replacer: async ({ paramKey }) => {
           const stdout = (await exec(`aws ssm get-parameter --name ${paramKey} --with-decryption --profile ${awsProfile}`)).stdout;
           const value = (JSON.parse(stdout).Parameter).Value;
+          if (!value) {
+            throw 'SSM Parameter not found';
+          }
           return value;
         },
       },
