@@ -3,7 +3,7 @@ const chalk = require("chalk");
 const path = require("path");
 const fs = require("fs");
 const readline = require("readline");
-const exec = util.promisify(require('child_process').exec);
+const exec = util.promisify(require("child_process").exec);
 const exists = util.promisify(require("fs").exists);
 const { Command, flags } = require("@oclif/command");
 
@@ -11,6 +11,7 @@ class GenEnvCommand extends Command {
   async run() {
     const { flags } = this.parse(GenEnvCommand);
     const filePath = path.join(process.cwd(), flags.templateFile);
+    const outFile = filePath.slice(0, -4);
     const awsProfile = flags.profile;
     const rules = [
       {
@@ -18,7 +19,7 @@ class GenEnvCommand extends Command {
         replacer: async ({ variable }) => {
           const value = process.env[variable];
           if (!value) {
-            throw 'Env var not found';
+            throw "Env var not found";
           }
           return value;
         },
@@ -26,11 +27,15 @@ class GenEnvCommand extends Command {
       {
         pattern: /\{\{\s*aws_secret:(?<secretId>.*?):(?<secretKey>.*?)\s*\}\}/,
         replacer: async ({ secretId, secretKey }) => {
-          const stdout = (await exec(`aws secretsmanager get-secret-value --secret-id ${secretId} --profile ${awsProfile}`)).stdout;
+          const stdout = (
+            await exec(
+              `aws secretsmanager get-secret-value --secret-id ${secretId} --profile ${awsProfile}`
+            )
+          ).stdout;
           const secrets = JSON.parse(JSON.parse(stdout).SecretString);
           const value = secrets[secretKey];
           if (!value) {
-            throw 'Secret not found';
+            throw "Secret not found";
           }
           return value;
         },
@@ -38,16 +43,19 @@ class GenEnvCommand extends Command {
       {
         pattern: /\{\{\s*aws_ssm_param:(?<paramKey>.*?)\s*\}\}/,
         replacer: async ({ paramKey }) => {
-          const stdout = (await exec(`aws ssm get-parameter --name ${paramKey} --with-decryption --profile ${awsProfile}`)).stdout;
-          const value = (JSON.parse(stdout).Parameter).Value;
+          const stdout = (
+            await exec(
+              `aws ssm get-parameter --name ${paramKey} --with-decryption --profile ${awsProfile}`
+            )
+          ).stdout;
+          const value = JSON.parse(stdout).Parameter.Value;
           if (!value) {
-            throw 'SSM Parameter not found';
+            throw "SSM Parameter not found";
           }
           return value;
         },
       },
     ];
-
 
     if (!(await exists(filePath))) {
       this.warn(`No template file found at ${filePath}`);
@@ -63,11 +71,15 @@ class GenEnvCommand extends Command {
       let lineCpy = line;
       for await (const rule of rules) {
         let match = lineCpy.match(rule.pattern);
-        while(match !== null) {
+        while (match !== null) {
           const replacementValue = await rule.replacer(match.groups);
           lineCpy = lineCpy.substr(0, match.index) + replacementValue + lineCpy.substr(match.index + match[0].length);
           match = lineCpy.match(rule.pattern);
         }
+
+        fs.writeFile(outFile, lineCpy + '\n', {'flag':'a'}, function (err) {
+          if (err) return console.log(err);
+        });
       }
     });
 
@@ -87,7 +99,7 @@ GenEnvCommand.flags = {
   profile: flags.string({
     char: "p",
     description: "AWS Profile",
-    default: "default"
+    default: "default",
   }),
 };
 
