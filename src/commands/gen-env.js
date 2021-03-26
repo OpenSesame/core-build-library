@@ -3,11 +3,10 @@ const chalk = require("chalk");
 const path = require("path");
 const fs = require("fs");
 const readline = require("readline");
+const stream = require("stream");
 const exec = util.promisify(require("child_process").exec);
 const exists = util.promisify(require("fs").exists);
 const { Command, flags } = require("@oclif/command");
-const { chunksToLinesAsync, chomp } = require("@rauschma/stringio");
-
 class GenEnvCommand extends Command {
   async run() {
     const { flags } = this.parse(GenEnvCommand);
@@ -67,26 +66,34 @@ class GenEnvCommand extends Command {
       await fs.promises.unlink(outFile);
     }
 
-    const rd = readline.createInterface({
-      input: fs.createReadStream(filePath),
-      console: false,
-    });
-
-    for await (const line of chunksToLinesAsync(rd)) {
-      let lineCpy = line;
+    const input = fs.createReadStream(filePath);
+    for await (const inputLine of readLines({ input })) {
+      let line = inputLine;
       for await (const rule of rules) {
-        let match = lineCpy.match(rule.pattern);
-        while (match !== null) {
+        let match = line.match(rule.pattern);
+        if (match !== null) {
           const replacementValue = await rule.replacer(match.groups);
-          lineCpy = lineCpy.substr(0, match.index) + replacementValue + lineCpy.substr(match.index + match[0].length);
-          match = lineCpy.match(rule.pattern);
+          line = line.substr(0, match.index) + replacementValue + line.substr(match.index + match[0].length);
         }
       }
-      await fs.promises.appendFile(outFile, lineCpy + "\n");
+      await fs.promises.appendFile(outFile, `${line}\n`);
     }
-
-    console.log(chalk.green("Operation successful.\n"));
   }
+  async catch(error) {
+    this.error(error);
+  }
+}
+
+function readLines({ input }) {
+  const output = new stream.PassThrough({ objectMode: true });
+  const rl = readline.createInterface({ input });
+  rl.on("line", (line) => {
+    output.write(line);
+  });
+  rl.on("close", () => {
+    output.push(null);
+  });
+  return output;
 }
 
 GenEnvCommand.description =
