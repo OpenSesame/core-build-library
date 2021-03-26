@@ -87,7 +87,5 @@ OPTIONS
 - Each rule will only be evaluated once per line
 - Rules are evaluated in a set order (Env variables -> AWS Secret -> AWS SSM Parameter). This means they are supported within each other.
 
-
-
 _See code: [src/commands/select-workspace.js](https://github.com/opensesame/core-build-library/blob/v1.0.0/src/commands/select-workspace.js)_
 <!-- commandsstop -->
