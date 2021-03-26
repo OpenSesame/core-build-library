@@ -60,3 +60,19 @@ OPTIONS
 
 _See code: [src/commands/select-workspace.js](https://github.com/opensesame/core-build-library/blob/v1.0.0/src/commands/select-workspace.js)_
 <!-- commandsstop -->
+
+## `core-build gen-env`
+
+Template .env files with values from AWS Secrets, AWS SSM, and environment variables.
+```
+USAGE
+  $ core-build gen-env
+
+OPTIONS
+  -h, --help                       show CLI help
+  -f, --templateFile=templateFile  [default: .env.tpl] The file to template.
+  -p, --profile=profile            [default: default] AWS Profile
+```
+
+_See code: [src/commands/select-workspace.js](https://github.com/opensesame/core-build-library/blob/v1.0.0/src/commands/select-workspace.js)_
+<!-- commandsstop -->

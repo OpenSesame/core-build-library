@@ -1,67 +1,26 @@
-const util = require("util");
-const chalk = require("chalk");
-const path = require("path");
-const fs = require("fs");
-const readline = require("readline");
-const stream = require("stream");
-const exec = util.promisify(require("child_process").exec);
-const exists = util.promisify(require("fs").exists);
-const { Command, flags } = require("@oclif/command");
+const util = require('util');
+const chalk = require('chalk');
+const path = require('path');
+const fs = require('fs');
+const readline = require('readline');
+const stream = require('stream');
+const exec = util.promisify(require('child_process').exec);
+const exists = util.promisify(require('fs').exists);
+const { Command, flags } = require('@oclif/command');
 class GenEnvCommand extends Command {
   async run() {
     const { flags } = this.parse(GenEnvCommand);
-    const filePath = path.join(process.cwd(), flags.templateFile);
-    const outFile = filePath.slice(0, -4);
-    const awsProfile = flags.profile;
-    const rules = [
-      {
-        pattern: /\$\{(?<variable>.*?)\}/,
-        replacer: async ({ variable }) => {
-          const value = process.env[variable];
-          if (!value) {
-            throw "Env var not found";
-          }
-          return value;
-        },
-      },
-      {
-        pattern: /\{\{\s*aws_secret:(?<secretId>.*?):(?<secretKey>.*?)\s*\}\}/,
-        replacer: async ({ secretId, secretKey }) => {
-          const stdout = (
-            await exec(
-              `aws secretsmanager get-secret-value --secret-id ${secretId} --profile ${awsProfile}`
-            )
-          ).stdout;
-          const secrets = JSON.parse(JSON.parse(stdout).SecretString);
-          const value = secrets[secretKey];
-          if (!value) {
-            throw "Secret not found";
-          }
-          return value;
-        },
-      },
-      {
-        pattern: /\{\{\s*aws_ssm_param:(?<paramKey>.*?)\s*\}\}/,
-        replacer: async ({ paramKey }) => {
-          const stdout = (
-            await exec(
-              `aws ssm get-parameter --name ${paramKey} --with-decryption --profile ${awsProfile}`
-            )
-          ).stdout;
-          const value = JSON.parse(stdout).Parameter.Value;
-          if (!value) {
-            throw "SSM Parameter not found";
-          }
-          return value;
-        },
-      },
-    ];
+    const rules = buildRules(flags.profile);
 
+    const filePath = path.join(process.cwd(), flags.templateFile);
+    if (!filePath.endsWith('.tpl')) {
+      throw new Error('File must end in .tpl');
+    }
     if (!(await exists(filePath))) {
-      this.warn(`No template file found at ${filePath}`);
-      return;
+      throw new Error(`No template file found at ${filePath}`);
     }
 
+    const outFile = filePath.slice(0, -4);
     if (await exists(outFile)) {
       await fs.promises.unlink(outFile);
     }
@@ -69,46 +28,93 @@ class GenEnvCommand extends Command {
     const input = fs.createReadStream(filePath);
     for await (const inputLine of readLines({ input })) {
       let line = inputLine;
-      for await (const rule of rules) {
+      for (const rule of rules) {
         let match = line.match(rule.pattern);
         if (match !== null) {
-          const replacementValue = await rule.replacer(match.groups);
+          const replacementValue = await rule.apply(match.groups);
           line = line.substr(0, match.index) + replacementValue + line.substr(match.index + match[0].length);
         }
       }
+
       await fs.promises.appendFile(outFile, `${line}\n`);
     }
-  }
-  async catch(error) {
-    this.error(error);
+
+    console.log(chalk.green('Operation successful.'));
   }
 }
 
+// https://medium.com/@wietsevenema/node-js-using-for-await-to-read-lines-from-a-file-ead1f4dd8c6f
 function readLines({ input }) {
   const output = new stream.PassThrough({ objectMode: true });
   const rl = readline.createInterface({ input });
-  rl.on("line", (line) => {
+  rl.on('line', (line) => {
     output.write(line);
   });
-  rl.on("close", () => {
-    output.push(null);
+  rl.on('close', () => {
+    output.end();
   });
   return output;
 }
 
-GenEnvCommand.description =
-  "Template .env files with values from AWS Secrets, AWS SSM, and environment variables";
+function buildRules(awsProfile) {
+  return [
+    {
+      pattern: /\$\{(?<variable>.*?)\}/,
+      apply: async ({ variable }) => {
+        const value = process.env[variable];
+        if (!value) {
+          throw new Error(`Env var ${variable} not found`);
+        }
+        return value;
+      },
+    },
+    {
+      pattern: /\{\{\s*aws_secret:(?<secretId>.*?):(?<secretKey>.*?)\s*\}\}/,
+      apply: async ({ secretId, secretKey }) => {
+        const stdout = (
+          await exec(
+            `aws secretsmanager get-secret-value --secret-id ${secretId} --profile ${awsProfile}`
+          )
+        ).stdout;
+        const secrets = JSON.parse(JSON.parse(stdout).SecretString);
+        const value = secrets[secretKey];
+        if (!value) {
+          throw new Error('Secret not found');
+        }
+        return value;
+      },
+    },
+    {
+      pattern: /\{\{\s*aws_ssm_param:(?<paramKey>.*?)\s*\}\}/,
+      apply: async ({ paramKey }) => {
+        const stdout = (
+          await exec(
+            `aws ssm get-parameter --name ${paramKey} --with-decryption --profile ${awsProfile}`
+          )
+        ).stdout;
+        const value = JSON.parse(stdout).Parameter.Value;
+        if (!value) {
+          throw new Error('SSM Parameter not found');
+        }
+        return value;
+      },
+    },
+  ];
+}
+
+GenEnvCommand.description = 'Template .env files with values from AWS Secrets, AWS SSM, and environment variables';
 
 GenEnvCommand.flags = {
+  help: flags.help({ char: 'h' }),
   templateFile: flags.string({
-    char: "f",
-    description: "The file to template.",
-    default: ".env.tpl",
+    char: 'f',
+    description: 'The file to template.',
+    default: '.env.tpl',
   }),
   profile: flags.string({
-    char: "p",
-    description: "AWS Profile",
-    default: "default",
+    char: 'p',
+    description: 'AWS Profile',
+    default: 'default',
   }),
 };
 
