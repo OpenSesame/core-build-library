@@ -6,4 +6,3 @@
 /yarn.lock
 node_modules
 *.env
-*.env.tpl
