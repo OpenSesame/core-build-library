@@ -76,11 +76,11 @@ class GenEnvCommand extends Command {
           lineCpy = lineCpy.substr(0, match.index) + replacementValue + lineCpy.substr(match.index + match[0].length);
           match = lineCpy.match(rule.pattern);
         }
-
-        fs.writeFile(outFile, lineCpy + '\n', {'flag':'a'}, function (err) {
-          if (err) return console.log(err);
-        });
       }
+
+      fs.writeFile(outFile, lineCpy + '\n', {'flag':'a'}, function (err) {
+        if (err) return console.log(err);
+      });
     });
 
     console.log(chalk.green("Operation successful.\n"));
