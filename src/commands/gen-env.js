@@ -6,6 +6,7 @@ const readline = require("readline");
 const exec = util.promisify(require("child_process").exec);
 const exists = util.promisify(require("fs").exists);
 const { Command, flags } = require("@oclif/command");
+const { chunksToLinesAsync, chomp } = require("@rauschma/stringio");
 
 class GenEnvCommand extends Command {
   async run() {
@@ -62,12 +63,16 @@ class GenEnvCommand extends Command {
       return;
     }
 
+    if (await exists(outFile)) {
+      await fs.promises.unlink(outFile);
+    }
+
     const rd = readline.createInterface({
       input: fs.createReadStream(filePath),
       console: false,
     });
 
-    rd.on("line", async function (line) {
+    for await (const line of chunksToLinesAsync(rd)) {
       let lineCpy = line;
       for await (const rule of rules) {
         let match = lineCpy.match(rule.pattern);
@@ -77,11 +82,8 @@ class GenEnvCommand extends Command {
           match = lineCpy.match(rule.pattern);
         }
       }
-
-      fs.writeFile(outFile, lineCpy + '\n', {'flag':'a'}, function (err) {
-        if (err) return console.log(err);
-      });
-    });
+      await fs.promises.appendFile(outFile, lineCpy + "\n");
+    }
 
     console.log(chalk.green("Operation successful.\n"));
   }
