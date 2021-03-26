@@ -76,11 +76,11 @@ OPTIONS
 ```
 <h3>Rules</h3>
 
-| Rule      | Syntax |
-| ----------- | ----------- |
-| Environment Variables      | ${\<variable_name>}       |
-| AWS Secret   | {{ aws_secret:\<secret_name>:\<json_key> }}        |
-| AWS SSM Parameter  | {{ aws_ssm_param:\<ssm_param_name> }}        |
+| Rule                       | Syntax                                        |
+| -----------                | -----------                                  |
+| Environment Variables      | ${\<variable_name>}                          |
+| AWS Secret                 | {{ aws_secret:\<secret_name>:\<json_key> }}  |
+| AWS SSM Parameter          | {{ aws_ssm_param:\<ssm_param_name> }}        |
 
 <h3>Notes</h3>
 
