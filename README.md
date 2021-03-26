@@ -76,7 +76,7 @@ OPTIONS
 ```
 <h3>Rules</h3>
 
-| Rule                       | Syntax                                        |
+| Rule                       | Syntax                                       |
 | -----------                | -----------                                  |
 | Environment Variables      | ${\<variable_name>}                          |
 | AWS Secret                 | {{ aws_secret:\<secret_name>:\<json_key> }}  |
