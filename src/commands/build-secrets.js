@@ -31,7 +31,7 @@ class BuildSecretsCommand extends Command {
   }
 }
 
-BuildSecretsCommand.description = `Output AWS secrets as environment variable assignments using secrets-map.json`
+BuildSecretsCommand.description = `Output AWS secrets as environment variable assignments using secrets-map.json.`
 
 BuildSecretsCommand.flags = {
   help: flags.help({char: 'h'}),

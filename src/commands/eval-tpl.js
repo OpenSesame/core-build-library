@@ -7,9 +7,10 @@ const stream = require('stream');
 const exec = util.promisify(require('child_process').exec);
 const exists = util.promisify(require('fs').exists);
 const { Command, flags } = require('@oclif/command');
-class GenEnvCommand extends Command {
+
+class EvalTplCommand extends Command {
   async run() {
-    const { flags } = this.parse(GenEnvCommand);
+    const { flags } = this.parse(EvalTplCommand);
     const rules = buildRules(flags.profile);
 
     const filePath = path.join(process.cwd(), flags.templateFile);
@@ -102,13 +103,13 @@ function buildRules(awsProfile) {
   ];
 }
 
-GenEnvCommand.description = 'Template .env files with values from AWS Secrets, AWS SSM, and environment variables';
+EvalTplCommand.description = 'Evaluates template (.tpl) files with values from AWS Secrets, AWS SSM, and environment variables.';
 
-GenEnvCommand.flags = {
+EvalTplCommand.flags = {
   help: flags.help({ char: 'h' }),
   templateFile: flags.string({
     char: 'f',
-    description: 'The file to template.',
+    description: 'The template file to evaluate. Must end in .tpl',
     default: '.env.tpl',
   }),
   profile: flags.string({
@@ -118,4 +119,4 @@ GenEnvCommand.flags = {
   }),
 };
 
-module.exports = GenEnvCommand;
+module.exports = EvalTplCommand;
