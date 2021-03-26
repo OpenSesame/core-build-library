@@ -73,10 +73,7 @@ function buildRules(awsProfile) {
       pattern: /\{\{\s*aws_secret:(?<secretId>.*?):(?<secretKey>.*?)\s*\}\}/,
       apply: async ({ secretId, secretKey }) => {
         const stdout = (
-          await exec(
-            `aws secretsmanager get-secret-value --secret-id ${secretId} --profile ${awsProfile}`
-          )
-        ).stdout;
+          await exec(`aws secretsmanager get-secret-value --secret-id ${secretId} --profile ${awsProfile}`)).stdout;
         const secrets = JSON.parse(JSON.parse(stdout).SecretString);
         const value = secrets[secretKey];
         if (!value) {
@@ -89,10 +86,7 @@ function buildRules(awsProfile) {
       pattern: /\{\{\s*aws_ssm_param:(?<paramKey>.*?)\s*\}\}/,
       apply: async ({ paramKey }) => {
         const stdout = (
-          await exec(
-            `aws ssm get-parameter --name ${paramKey} --with-decryption --profile ${awsProfile}`
-          )
-        ).stdout;
+          await exec(`aws ssm get-parameter --name ${paramKey} --with-decryption --profile ${awsProfile}`)).stdout;
         const value = JSON.parse(stdout).Parameter.Value;
         if (!value) {
           throw new Error('SSM Parameter not found');
