@@ -13,7 +13,7 @@ class SelectWorkspaceCommand extends Command {
   }
 }
 
-SelectWorkspaceCommand.description = `Select a terraform workspace, or create it if it does not exist. If workspace name is not provided, use the current git branch.`
+SelectWorkspaceCommand.description = 'Select a terraform workspace, or create it if it does not exist. If workspace name is not provided, use the current git branch.'
 
 SelectWorkspaceCommand.flags = {
   help: flags.help({char: 'h'}),

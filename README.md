@@ -25,6 +25,7 @@ USAGE
 
 - [`core-build build-secrets`](#core-build-build-secrets)
 - [`core-build select-workspace`](#core-build-select-workspace)
+- [`core-build eval-tpl`](#core-build-eval-tpl)
 
 ## `core-build build-secrets`
 
@@ -57,6 +58,34 @@ OPTIONS
   -w, --workspace=workspace  workspace name. If not provided, the current git branch will be used (minus the part before
                              a / character)
 ```
+
+_See code: [src/commands/select-workspace.js](https://github.com/opensesame/core-build-library/blob/v1.0.0/src/commands/select-workspace.js)_
+<!-- commandsstop -->
+
+## `core-build eval-tpl`
+
+Evaluates template (.tpl) files with values from AWS Secrets, AWS SSM, and environment variables.
+```
+USAGE
+  $ core-build eval-tpl
+
+OPTIONS
+  -h, --help                       show CLI help
+  -f, --templateFile=templateFile  [default: .env.tpl] The template file to evaluate.  Must end in .tpl
+  -p, --profile=profile            [default: default] AWS Profile
+```
+<h3>Rules</h3>
+
+| Rule                       | Syntax                                       |
+| -----------                | -----------                                  |
+| Environment Variables      | ${\<variable_name>}                          |
+| AWS Secret                 | {{ aws_secret:\<secret_name>:\<json_key> }}  |
+| AWS SSM Parameter          | {{ aws_ssm_param:\<ssm_param_name> }}        |
+
+<h3>Notes</h3>
+
+- Each rule will only be evaluated once per line
+- Rules are evaluated in a set order (Env variables -> AWS Secret -> AWS SSM Parameter). This means they are supported within each other.
 
 _See code: [src/commands/select-workspace.js](https://github.com/opensesame/core-build-library/blob/v1.0.0/src/commands/select-workspace.js)_
 <!-- commandsstop -->
