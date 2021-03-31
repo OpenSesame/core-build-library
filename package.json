@@ -6,6 +6,9 @@
   "bin": {
     "core-build": "./bin/run"
   },
+  "scripts": {
+    "build": "copyfiles \"./bin/**/*\" package.json dist && copyfiles -u 1 \"./src/**/*\" dist"
+  },  
   "dependencies": {
     "@oclif/command": "^1.8.0",
     "@oclif/config": "^1.17.0",

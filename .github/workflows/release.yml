@@ -42,16 +42,13 @@ jobs:
       - name: Install dependency
         run: npm ci
 
-      - name: Build Package
-        run: npm run build --if-present
-
       - name: Bump Package Version
         run: npm version ${{needs.BumpVersionCreateTag.outputs.new_tag}} -no-git-tag-version
 
-      - name: Copy package.json
-        run: cp package.json src
+      - name: Build Package
+        run: npm run build --if-present
 
       - name: Publish GitHub Package
-        run: npm publish ./src
+        run: npm publish ./dist
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
