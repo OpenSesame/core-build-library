@@ -1,0 +1,57 @@
+name: Release @opensesame/core-build-library
+
+on: [push]
+
+jobs:
+  BumpVersionCreateTag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.34.0
+        id: github-tag-action
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
+          TAG_CONTEXT: repo
+          PRERELEASE_SUFFIX: beta
+          RELEASE_BRANCHES: main
+          INITIAL_VERSION: 1.0.5
+          VERBOSE: false
+          DRY_RUN: false
+    outputs:
+      new_tag: ${{ steps.github-tag-action.outputs.new_tag }}
+      tag: ${{ steps.github-tag-action.outputs.tag }}
+      part: ${{ steps.github-tag-action.outputs.part }}
+
+  Publish:
+    runs-on: ubuntu-latest
+    needs: BumpVersionCreateTag
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Install dependency
+        run: npm ci
+
+      - name: Build Package
+        run: npm run build --if-present
+
+      - name: Bump Package Version
+        run: npm version ${{needs.BumpVersionCreateTag.outputs.new_tag}} -no-git-tag-version
+
+      - name: Copy package.json
+        run: cp package.json src
+
+      - name: Publish GitHub Package
+        run: npm publish ./src
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
