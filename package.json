@@ -47,9 +47,9 @@
   "keywords": [
     "oclif"
   ],
-  "main": "src/index.js",
+  "main": "index.js",
   "oclif": {
-    "commands": "./src/commands",
+    "commands": "./commands",
     "bin": "core-build",
     "plugins": [
       "@oclif/plugin-help"
