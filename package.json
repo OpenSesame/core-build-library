@@ -30,7 +30,8 @@
     "/bin",
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json",
-    "/src"
+    "/commands",
+    "/index.js"
   ],
   "repository": {
     "type": "git",
