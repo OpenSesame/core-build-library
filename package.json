@@ -1,5 +1,5 @@
 {
-  "name": "core-build-library",
+  "name": "@opensesame/core-build-library",
   "description": "Core Build Library",
   "version": "1.0.5",
   "author": "Core Team",
