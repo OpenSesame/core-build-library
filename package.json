@@ -6,7 +6,6 @@
   "bin": {
     "core-build": "./bin/run"
   },
-  "bugs": "https://github.com/opensesame/core-build-library/issues",
   "dependencies": {
     "@oclif/command": "^1.8.0",
     "@oclif/config": "^1.17.0",
@@ -29,11 +28,21 @@
     "/oclif.manifest.json",
     "/src"
   ],
-  "homepage": "https://github.com/opensesame/core-build-library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OpenSesame/core-build-library"
+  },
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/OpenSesame/core-build-library/issues"
+  },
+  "homepage": "https://github.com/OpenSesame/core-build-library#readme",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/opensesame"
+  },
   "keywords": [
     "oclif"
   ],
-  "license": "MIT",
   "main": "src/index.js",
   "oclif": {
     "commands": "./src/commands",
@@ -41,6 +50,5 @@
     "plugins": [
       "@oclif/plugin-help"
     ]
-  },
-  "repository": "opensesame/core-build-library"
+  }
 }
