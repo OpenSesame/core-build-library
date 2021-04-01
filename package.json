@@ -1,12 +1,14 @@
 {
-  "name": "core-build-library",
+  "name": "@opensesame/core-build-library",
   "description": "Core Build Library",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": "Core Team",
   "bin": {
     "core-build": "./bin/run"
   },
-  "bugs": "https://github.com/opensesame/core-build-library/issues",
+  "scripts": {
+    "build": "copyfiles \"./bin/**/*\" package.json dist && copyfiles -u 1 \"./src/**/*\" dist"
+  },
   "dependencies": {
     "@oclif/command": "^1.8.0",
     "@oclif/config": "^1.17.0",
@@ -18,6 +20,7 @@
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.26.0",
+    "copyfiles": "^2.4.1",
     "rimraf": "^3.0.2"
   },
   "engines": {
@@ -27,20 +30,30 @@
     "/bin",
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json",
-    "/src"
+    "/commands",
+    "/index.js"
   ],
-  "homepage": "https://github.com/opensesame/core-build-library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OpenSesame/core-build-library"
+  },
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/OpenSesame/core-build-library/issues"
+  },
+  "homepage": "https://github.com/OpenSesame/core-build-library#readme",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/opensesame"
+  },
   "keywords": [
     "oclif"
   ],
-  "license": "MIT",
-  "main": "src/index.js",
+  "main": "index.js",
   "oclif": {
-    "commands": "./src/commands",
+    "commands": "./commands",
     "bin": "core-build",
     "plugins": [
       "@oclif/plugin-help"
     ]
-  },
-  "repository": "opensesame/core-build-library"
+  }
 }
