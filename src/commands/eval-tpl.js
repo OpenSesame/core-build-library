@@ -30,8 +30,11 @@ class EvalTplCommand extends Command {
     for await (const inputLine of readLines({ input })) {
       let line = inputLine;
       for (const rule of rules) {
-        let match = line.match(rule.pattern);
-        if (match !== null) {
+        const regex = new RegExp(rule.pattern, 'g');
+        let matches = [...line.matchAll(regex)];
+        // Go through the matches in reverse order, so the match
+        // indices remain valid after each replacmeent
+        for (let match of matches.reverse()) {
           const replacementValue = await rule.apply(match.groups);
           line = line.substr(0, match.index) + replacementValue + line.substr(match.index + match[0].length);
         }
@@ -40,7 +43,7 @@ class EvalTplCommand extends Command {
       await fs.promises.appendFile(outFile, `${line}\n`);
     }
 
-    console.log(chalk.green('Operation successful.'));
+    console.log(chalk.green(`Generated ${outFile} from template`));
   }
 }
 
@@ -58,6 +61,7 @@ function readLines({ input }) {
 }
 
 function buildRules(awsProfile) {
+  const profileFlag = awsProfile ? `--profile ${awsProfile}` : '';
   return [
     {
       pattern: /\$\{(?<variable>.*?)\}/,
@@ -73,7 +77,7 @@ function buildRules(awsProfile) {
       pattern: /\{\{\s*aws_secret:(?<secretId>.*?):(?<secretKey>.*?)\s*\}\}/,
       apply: async ({ secretId, secretKey }) => {
         const stdout = (
-          await exec(`aws secretsmanager get-secret-value --secret-id ${secretId} --profile ${awsProfile}`)).stdout;
+          await exec(`aws secretsmanager get-secret-value --secret-id ${secretId} ${profileFlag}`)).stdout;
         const secrets = JSON.parse(JSON.parse(stdout).SecretString);
         const value = secrets[secretKey];
         if (!value) {
@@ -86,7 +90,7 @@ function buildRules(awsProfile) {
       pattern: /\{\{\s*aws_ssm_param:(?<paramKey>.*?)\s*\}\}/,
       apply: async ({ paramKey }) => {
         const stdout = (
-          await exec(`aws ssm get-parameter --name ${paramKey} --with-decryption --profile ${awsProfile}`)).stdout;
+          await exec(`aws ssm get-parameter --name ${paramKey} --with-decryption ${profileFlag}`)).stdout;
         const value = JSON.parse(stdout).Parameter.Value;
         if (!value) {
           throw new Error('SSM Parameter not found');
@@ -108,8 +112,7 @@ EvalTplCommand.flags = {
   }),
   profile: flags.string({
     char: 'p',
-    description: 'AWS Profile',
-    default: 'default',
+    description: 'AWS Profile'
   }),
 };
 

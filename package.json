@@ -7,7 +7,7 @@
     "core-build": "./bin/run"
   },
   "scripts": {
-    "build": "copyfiles \"./bin/**/*\" package.json dist && copyfiles -u 1 \"./src/**/*\" dist"
+    "build": "copyfiles \"./bin/**/*\" \"./src/**/*\" package.json dist"
   },
   "dependencies": {
     "@oclif/command": "^1.8.0",
@@ -50,7 +50,7 @@
   ],
   "main": "index.js",
   "oclif": {
-    "commands": "./commands",
+    "commands": "./src/commands",
     "bin": "core-build",
     "plugins": [
       "@oclif/plugin-help"
