@@ -28,10 +28,9 @@
   },
   "files": [
     "/bin",
+    "/src",
     "/npm-shrinkwrap.json",
-    "/oclif.manifest.json",
-    "/commands",
-    "/index.js"
+    "/oclif.manifest.json"
   ],
   "repository": {
     "type": "git",
