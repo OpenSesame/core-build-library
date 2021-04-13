@@ -62,13 +62,12 @@ function readLines({ input }) {
 
 function stringifyJSON(value) {
   try {
-    // Stringify value if JSON because env vars cannot be JSON
+    // Stringify value if JSON because we cannot write JSON to a file
     const stringifiedVal = JSON.stringify(value);
     return stringifiedVal;
-
-} catch (e) {
-    return value;
-}
+  } catch (e) {
+      return value;
+  }
 }
 
 function buildRules(awsProfile) {
@@ -94,7 +93,6 @@ function buildRules(awsProfile) {
         if (!value) {
           throw new Error('Secret not found');
         }
-
         return stringifyJSON(value);
       },
     },
@@ -107,7 +105,7 @@ function buildRules(awsProfile) {
         if (!value) {
           throw new Error('SSM Parameter not found');
         }
-        return value;
+        return stringifyJSON(value);
       },
     },
   ];
