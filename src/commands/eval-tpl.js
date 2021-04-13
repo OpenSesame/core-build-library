@@ -60,6 +60,17 @@ function readLines({ input }) {
   return output;
 }
 
+function stringifyJSON(value) {
+  try {
+    // Stringify value if JSON because env vars cannot be JSON
+    const stringifiedVal = JSON.stringify(value);
+    return stringifiedVal;
+
+} catch (e) {
+    return value;
+}
+}
+
 function buildRules(awsProfile) {
   const profileFlag = awsProfile ? `--profile ${awsProfile}` : '';
   return [
@@ -83,7 +94,8 @@ function buildRules(awsProfile) {
         if (!value) {
           throw new Error('Secret not found');
         }
-        return value;
+
+        return stringifyJSON(value);
       },
     },
     {
