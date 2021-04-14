@@ -60,14 +60,9 @@ function readLines({ input }) {
   return output;
 }
 
-function stringifyJSON(value) {
-  try {
-    // Stringify value if JSON because we cannot write JSON to a file
-    const stringifiedVal = JSON.stringify(value);
-    return stringifiedVal;
-  } catch (e) {
-      return value;
-  }
+function transformResponse(value) {
+  // Stringify value if JSON because we cannot write JSON to a file
+  return typeof value === 'object' && value !== null ? JSON.stringify(value) : value;
 }
 
 function buildRules(awsProfile) {
@@ -80,7 +75,7 @@ function buildRules(awsProfile) {
         if (!value) {
           throw new Error(`Env var ${variable} not found`);
         }
-        return value;
+        return transformResponse(value);
       },
     },
     {
@@ -93,7 +88,7 @@ function buildRules(awsProfile) {
         if (!value) {
           throw new Error('Secret not found');
         }
-        return stringifyJSON(value);
+        return transformResponse(value);
       },
     },
     {
@@ -105,7 +100,7 @@ function buildRules(awsProfile) {
         if (!value) {
           throw new Error('SSM Parameter not found');
         }
-        return stringifyJSON(value);
+        return transformResponse(value);
       },
     },
   ];
