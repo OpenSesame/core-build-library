@@ -60,6 +60,11 @@ function readLines({ input }) {
   return output;
 }
 
+function transformResponse(value) {
+  // Stringify value if JSON because we cannot write JSON to a file
+  return typeof value === 'object' && value !== null ? JSON.stringify(value) : value;
+}
+
 function buildRules(awsProfile) {
   const profileFlag = awsProfile ? `--profile ${awsProfile}` : '';
   return [
@@ -70,7 +75,7 @@ function buildRules(awsProfile) {
         if (!value) {
           throw new Error(`Env var ${variable} not found`);
         }
-        return value;
+        return transformResponse(value);
       },
     },
     {
@@ -83,7 +88,7 @@ function buildRules(awsProfile) {
         if (!value) {
           throw new Error('Secret not found');
         }
-        return value;
+        return transformResponse(value);
       },
     },
     {
@@ -95,7 +100,7 @@ function buildRules(awsProfile) {
         if (!value) {
           throw new Error('SSM Parameter not found');
         }
-        return value;
+        return transformResponse(value);
       },
     },
   ];
