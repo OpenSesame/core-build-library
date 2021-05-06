@@ -89,3 +89,21 @@ OPTIONS
 
 _See code: [src/commands/select-workspace.js](https://github.com/opensesame/core-build-library/blob/v1.0.0/src/commands/select-workspace.js)_
 <!-- commandsstop -->
+
+## `core-build name-prefix`
+
+Calculates the name prefix. If a name is not provided, use the current git branch. Length defaults to 24 characters.
+```
+USAGE
+  $ core-build name-prefix
+
+OPTIONS
+  -h, --help           show CLI help
+  -l, --length=length  [default: 24] length of the name prefix. If not provided, it will default to 24.
+
+  -n, --name=name      name. If not provided, the current git branch will be used (minus the part before a /
+                       character)
+```
+
+_See code: [src/commands/select-workspace.js](https://github.com/opensesame/core-build-library/blob/v1.0.0/src/commands/select-workspace.js)_
+<!-- commandsstop -->
