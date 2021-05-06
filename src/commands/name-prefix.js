@@ -18,7 +18,7 @@ NamePrefixCommand.description = 'Calculates the name prefix. If a name is not pr
 NamePrefixCommand.flags = {
   help: flags.help({char: 'h'}),
   name: flags.string({char: 'n', description: 'name. If not provided, the current git branch will be used (minus the part before a / character)'}),
-  length: flags.integer({char: 'l', description: 'length of the name prefix. If not provided, it will default to 24.', default: 24})
+  length: flags.integer({char: 'l', description: 'length of the name prefix', default: 24})
 }
 
 module.exports = NamePrefixCommand;

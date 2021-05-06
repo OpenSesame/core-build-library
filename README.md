@@ -26,6 +26,7 @@ USAGE
 - [`core-build build-secrets`](#core-build-build-secrets)
 - [`core-build select-workspace`](#core-build-select-workspace)
 - [`core-build eval-tpl`](#core-build-eval-tpl)
+- [`core-build name-prefix`](#core-build-name-prefix)
 
 ## `core-build build-secrets`
 
@@ -87,7 +88,7 @@ OPTIONS
 - Each rule will only be evaluated once per line
 - Rules are evaluated in a set order (Env variables -> AWS Secret -> AWS SSM Parameter). This means they are supported within each other.
 
-_See code: [src/commands/select-workspace.js](https://github.com/opensesame/core-build-library/blob/v1.0.0/src/commands/select-workspace.js)_
+_See code: [src/commands/eval-tpl.js](https://github.com/opensesame/core-build-library/blob/v1.0.0/src/commands/eval-tpl.js)_
 <!-- commandsstop -->
 
 ## `core-build name-prefix`
@@ -99,11 +100,11 @@ USAGE
 
 OPTIONS
   -h, --help           show CLI help
-  -l, --length=length  [default: 24] length of the name prefix. If not provided, it will default to 24.
+  -l, --length=length  [default: 24] length of the name prefix
 
   -n, --name=name      name. If not provided, the current git branch will be used (minus the part before a /
                        character)
 ```
 
-_See code: [src/commands/select-workspace.js](https://github.com/opensesame/core-build-library/blob/v1.0.0/src/commands/select-workspace.js)_
+_See code: [src/commands/name-prefix.js](https://github.com/opensesame/core-build-library/blob/v1.0.0/src/commands/name-prefix.js)_
 <!-- commandsstop -->
