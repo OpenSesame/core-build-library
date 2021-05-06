@@ -1,6 +1,4 @@
-const util = require('util');
 const currentBranch = require('current-git-branch');
-const exec = util.promisify(require('child_process').exec);
 const {Command, flags} = require('@oclif/command');
 
 class NamePrefixCommand extends Command {
