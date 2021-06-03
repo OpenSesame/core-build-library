@@ -1,9 +1,14 @@
-name: Release @opensesame/core-build-library
+name: Release experimental @opensesame/core-build-library
 
-on: [push]
+on:
+  push:
+    paths:
+      - '*'
+    branches-ignore:
+      - main
 
 jobs:
-  BumpVersionCreateTag:
+  BumpVersionAndCreateTag:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -23,12 +28,10 @@ jobs:
           DRY_RUN: false
     outputs:
       new_tag: ${{ steps.github-tag-action.outputs.new_tag }}
-      tag: ${{ steps.github-tag-action.outputs.tag }}
-      part: ${{ steps.github-tag-action.outputs.part }}
 
-  Publish:
+  BuildAndPublish:
     runs-on: ubuntu-latest
-    needs: BumpVersionCreateTag
+    needs: BumpVersionAndCreateTag
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -39,16 +42,9 @@ jobs:
           node-version: '12.x'
           registry-url: 'https://npm.pkg.github.com'
 
-      - name: Install dependency
-        run: npm ci
-
-      - name: Bump Package Version
-        run: npm version ${{needs.BumpVersionCreateTag.outputs.new_tag}} -no-git-tag-version
-
-      - name: Build Package
-        run: npm run build --if-present
-
-      - name: Publish GitHub Package
-        run: npm publish ./dist
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build And Publish
+        uses: opensesame/core-github-actions/build-publish@v1
+        with:
+          is_release: 'false'
+          node_auth_token: ${{ secrets.GITHUB_TOKEN }}
+          package_version: ${{ needs.BumpVersionAndCreateTag.outputs.new_tag }}
