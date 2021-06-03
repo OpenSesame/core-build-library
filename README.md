@@ -1,11 +1,17 @@
-core-build-library
+<!--This README was made with the Markdown All in One Extension (https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one) -->
+
+core-build-library <!-- omit in toc -->
+
 ==================
 
 Core Build Commands
 
 <!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
+- [Usage](#usage)
+- [Commands](#commands)
+  - [`core-build build-secrets`](#core-build-build-secrets)
+  - [`core-build select-workspace`](#core-build-select-workspace)
+  - [`core-build eval-tpl`](#core-build-eval-tpl)
 <!-- tocstop -->
 # Usage
 <!-- usage -->
@@ -22,13 +28,6 @@ USAGE
 ```
 <!-- usagestop -->
 # Commands
-
-- [core-build-library](#core-build-library)
-- [Usage](#usage)
-- [Commands](#commands)
-  - [`core-build build-secrets`](#core-build-build-secrets)
-  - [`core-build select-workspace`](#core-build-select-workspace)
-  - [`core-build eval-tpl`](#core-build-eval-tpl)
 
 ## `core-build build-secrets`
 
