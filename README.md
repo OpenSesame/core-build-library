@@ -23,9 +23,12 @@ USAGE
 <!-- usagestop -->
 # Commands
 
-- [`core-build build-secrets`](#core-build-build-secrets)
-- [`core-build select-workspace`](#core-build-select-workspace)
-- [`core-build eval-tpl`](#core-build-eval-tpl)
+- [core-build-library](#core-build-library)
+- [Usage](#usage)
+- [Commands](#commands)
+  - [`core-build build-secrets`](#core-build-build-secrets)
+  - [`core-build select-workspace`](#core-build-select-workspace)
+  - [`core-build eval-tpl`](#core-build-eval-tpl)
 
 ## `core-build build-secrets`
 
@@ -89,3 +92,5 @@ OPTIONS
 
 _See code: [src/commands/select-workspace.js](https://github.com/opensesame/core-build-library/blob/v1.0.0/src/commands/select-workspace.js)_
 <!-- commandsstop -->
+
+fake change
