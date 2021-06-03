@@ -1,0 +1,69 @@
+name: Release latest @opensesame/core-build-library
+
+on:
+  pull_request_review:
+    branches: main
+    types: [submitted]
+
+jobs:
+  CancelWaitingWorkflows:
+    name: Cancel Waiting Workflows
+    runs-on: ubuntu-latest
+    steps:
+      # Use this GitHub Action at least once in this workflow as soon as possible.
+      - uses: opensesame/core-auto-cancel-redundant-workflow@v1.7.4
+        with:
+          WORKFLOW_RUN_STATUS_FILTER: waiting
+  BumpVersionAndCreateTag:
+    runs-on: ubuntu-latest
+    environment: prod
+
+    if: github.event.review.state == 'approved'
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.34.0
+        id: github-tag-action
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
+          TAG_CONTEXT: repo
+          RELEASE_BRANCHES: '.*'
+          INITIAL_VERSION: 1.0.5
+          VERBOSE: false
+          DRY_RUN: false
+    outputs:
+      new_tag: ${{ steps.github-tag-action.outputs.new_tag }}
+
+  BuildAndPublish:
+    runs-on: ubuntu-latest
+    needs: BumpVersionAndCreateTag
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Build And Publish
+        uses: opensesame/core-github-actions/build-publish@v1
+        with:
+          is_release: 'true'
+          node_auth_token: ${{ secrets.GITHUB_TOKEN }}
+          package_version: ${{ needs.BumpVersionAndCreateTag.outputs.new_tag }}
+
+  SetRelease:
+    runs-on: ubuntu-latest
+    needs: [BumpVersionAndCreateTag, BuildAndPublish]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ needs.BumpVersionAndCreateTag.outputs.new_tag }}
+          token: ${{ secrets.GITHUB_TOKEN }}
