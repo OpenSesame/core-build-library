@@ -58,7 +58,7 @@ OPTIONS
   -h, --help                 show CLI help
 
   -w, --workspace=workspace  workspace name. If not provided, the current git branch will be used (minus the part before
-                             a / character)
+                            a / character)
 ```
 
 _See code: [src/commands/select-workspace.js](https://github.com/opensesame/core-build-library/blob/v1.0.0/src/commands/select-workspace.js)_
