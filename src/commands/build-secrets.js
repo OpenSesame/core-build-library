@@ -7,9 +7,9 @@ const {Command, flags} = require('@oclif/command');
 class BuildSecretsCommand extends Command {
   async run() {
     const {flags} = this.parse(BuildSecretsCommand);
-    
+
     const mapPath = path.join(process.cwd(), flags.mapfile);
-    
+
     if (!await exists(mapPath)) {
       this.warn(`No secrets map found at ${mapPath}`);
       return;
